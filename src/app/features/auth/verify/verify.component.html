@@ -1,0 +1,38 @@
+<div class="verify-container">
+  <mat-card class="verify-card">
+    <mat-card-header>
+      <mat-card-title>Verificación de correo</mat-card-title>
+      <mat-card-subtitle>Completa para activar tu cuenta</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (loading()) {
+        <div class="center">
+          <mat-spinner diameter="36"></mat-spinner>
+          <p>Comprobando token...</p>
+        </div>
+      } @else {
+        @if (success()) {
+          <div class="result success">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <h3>Cuenta verificada</h3>
+            <p>{{ message() }}</p>
+            <div class="actions">
+              <button mat-raised-button color="primary" (click)="goToLogin()">Ir a iniciar sesión</button>
+            </div>
+          </div>
+        } @else {
+          <div class="result error">
+            <mat-icon color="warn">error</mat-icon>
+            <h3>Error al verificar</h3>
+            <p>{{ message() }}</p>
+            <div class="actions">
+              <button mat-stroked-button color="primary" (click)="retry()">Reintentar</button>
+              <button mat-button (click)="goHome()">Volver</button>
+            </div>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
