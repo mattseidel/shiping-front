@@ -157,7 +157,6 @@ import { Client } from '../../../shared/models/client.model';
                   Actualizando...
                 } @else {
                   <mat-icon>update</mat-icon>
-                  Actualizar Estado
                 }
               </button>
             </div>

@@ -40,6 +40,10 @@ import { PaginatedResponse } from '../../../shared/models/common.model';
 })
 export class ShipmentFormComponent implements OnInit {
   shipmentForm: FormGroup;
+
+  trackByClient(index: number, client: Client): string {
+    return client._id;
+  }
   loading = signal(false);
   submitting = signal(false);
   isEdit = signal(false);

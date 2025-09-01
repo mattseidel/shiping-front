@@ -32,7 +32,7 @@
               <mat-form-field class="full-width">
                 <mat-label>Cliente *</mat-label>
                 <mat-select formControlName="clientId">
-                  <mat-option *ngFor="let client of clients(); trackBy: trackByClient" [value]="client._id">{{ client.name }}</mat-option>
+                  <mat-option *ngFor="let client of clients(); trackBy:trackByClient" [value]="client._id">{{ client.name }}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="shipmentForm.get('clientId')?.invalid && shipmentForm.get('clientId')?.touched">El cliente es requerido</mat-error>
               </mat-form-field>

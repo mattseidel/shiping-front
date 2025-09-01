@@ -74,8 +74,7 @@ import { ShipmentService } from '../../core/services/shipment.service';
                 <mat-spinner diameter="20"></mat-spinner>
                 Creando...
               } @else {
-                <mat-icon>add_circle</mat-icon>
-                Crear Clientes
+                <mat-icon>add_circle Crear Clientes</mat-icon>
               }
             </button>
           </mat-card-actions>
@@ -118,11 +117,9 @@ import { ShipmentService } from '../../core/services/shipment.service';
               [disabled]="creatingShipments() || shipmentsCountControl.invalid"
             >
               @if (creatingShipments()) {
-                <mat-spinner diameter="20"></mat-spinner>
-                Creando...
+                <mat-spinner diameter="20">Creando...</mat-spinner>
               } @else {
-                <mat-icon>add_circle</mat-icon>
-                Crear Envíos
+                <mat-icon>add_circle Crear Envíos </mat-icon>
               }
             </button>
           </mat-card-actions>
