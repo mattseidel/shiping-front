@@ -1,59 +1,98 @@
-# ShipingFront
+# Shiping Front — Frontend de Gestión de Envíos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+Este repositorio contiene el frontend Angular (v20) para una aplicación de gestión de envíos. La interfaz utiliza Angular Material y consume una API REST (por defecto en http://localhost:4000).
 
-## Development server
+Resumen rápido
+- Framework: Angular 20
+- UI: Angular Material
+- Autenticación: JWT (token guardado en localStorage como `auth_token`)
+- API por defecto: `http://localhost:4000`
 
-To start a local development server, run:
+Requisitos
+- Node.js (>=16 recomendado)
+- npm
+- Backend (API) accesible y con CORS habilitado para `http://localhost:4200` si se desarrolla localmente
 
-```bash
-ng serve
+Instalación y ejecución
+1. Instalar dependencias:
+
+```sh
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+2. Iniciar servidor de desarrollo:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```sh
+npm start
+# o `ng serve` — abre en http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+3. Build producción:
 
-```bash
-ng generate --help
+```sh
+npm run build
 ```
 
-## Building
+4. Ejecutar tests (si se usan):
 
-To build the project run:
-
-```bash
-ng build
+```sh
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Estructura y componentes principales
+- `src/app/features/auth` — Login, Register, Verify
+- `src/app/features/dashboard` — Panel principal
+- `src/app/features/clients` — Gestión de clientes
+- `src/app/features/shipments` — Gestión de envíos
+- `src/app/core/services` — Servicios de API (auth, clients, shipments)
+- `src/app/shared/components/layout` — Layout principal con sidebar colapsable
 
-## Running unit tests
+Rutas importantes (frontend)
+- `/auth/login` — Iniciar sesión
+- `/auth/register` — Registro
+- `/auth/verify?token=...` — Verificación de email
+- `/dashboard` — Dashboard (protegido)
+- `/clients` — Clientes
+- `/shipments` — Envíos
+- `/test-data` — Semilla de datos (UI)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Configuración de la API
+Actualmente los servicios usan constantes con la URL base. Archivos relevantes:
+- `src/app/core/services/auth.service.ts`  -> `private readonly apiUrl = 'http://localhost:4000'`
+- `src/app/core/services/client.service.ts` -> `private readonly apiUrl = 'http://localhost:4000/clients'`
+- `src/app/core/services/shipment.service.ts` -> `private readonly apiUrl = 'http://localhost:4000'`
 
-```bash
-ng test
-```
+Recomendación: crear `src/environments/environment.ts` y `src/environments/environment.prod.ts` con una propiedad `apiBase` y refactorizar los servicios para usar `environment.apiBase`.
 
-## Running end-to-end tests
+Verificación de email
+- El backend expone `GET /auth/verify?token=…` (el token de verificación se envía por email tras el registro).
+- Se agregó `VerifyComponent` en `src/app/features/auth/verify/` que lee `?token=` y llama a `AuthService.verifyEmail(token)` mostrando resultado.
 
-For end-to-end (e2e) testing, run:
+Cómo probar verificación localmente
+- Abrir en el navegador: `http://localhost:4200/auth/verify?token=TU_TOKEN`
 
-```bash
-ng e2e
-```
+Notas sobre autenticación
+- Al hacer login, el backend devuelve `{ accessToken, user }`. El token se almacena en `localStorage` y se añade a las peticiones mediante interceptor HTTP.
+- Existe endpoint de refresh: `GET /auth/refresh`.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Sidebar y layout
+- El layout principal usa un `mat-sidenav` colapsable. El estado de colapso usa Angular `signal` y los estilos aseguran que, al colapsar, solo queden visibles los iconos.
 
-## Additional Resources
+Debugging y problemas comunes
+- Si hay errores CORS: revisar configuración del backend.
+- Si las rutas no cargan: comprobar que el backend responde y que la URL base en los servicios es correcta.
+- Si el sidebar no se colapsa visualmente: limpiar caché o reconstruir; revisar estilos globales que puedan sobrescribir.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Sugerencias de mejora (opciones que puedo implementar)
+- Refactorizar servicios para usar `environment.apiBase` (creo los archivos `src/environments/*` y actualizo los servicios).
+- Añadir ejemplos curl para los endpoints principales.
+- Añadir instrucciones de despliegue y Dockerfile para la build.
+
+Contribuir
+- Crear una rama, realizar cambios y abrir un PR. Mantener consistencia con Angular style guide.
+
+Licencia
+- Entregable por encargo. Añadir licencia según acuerdo.
+
+---
+Si quieres, implemento ahora la refactorización a `environment.apiBase` y actualizo los servicios automáticamente.

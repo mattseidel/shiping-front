@@ -1,0 +1,161 @@
+<div class="shipment-list-container">
+  <div class="header">
+    <h1>
+      <mat-icon>local_shipping</mat-icon>
+      Envíos
+    </h1>
+    <button mat-raised-button color="primary" routerLink="/shipments/new">
+      <mat-icon>add</mat-icon>
+      Nuevo Envío
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Lista de Envíos</mat-card-title>
+      <div class="spacer"></div>
+      <div class="filters">
+        <mat-form-field class="search-field">
+          <mat-label>Buscar por código...</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="TRK-ABC123">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="status-filter">
+          <mat-label>Estado</mat-label>
+          <mat-select [formControl]="statusControl">
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="created">Creado</mat-option>
+            <mat-option value="in_transit">En Tránsito</mat-option>
+            <mat-option value="delivered">Entregado</mat-option>
+            <mat-option value="canceled">Cancelado</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="client-filter">
+          <mat-label>Cliente</mat-label>
+          <mat-select [formControl]="clientControl">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let client of clients(); trackBy: trackByClient" [value]="client._id">{{ client.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <ng-container *ngIf="loading(); else listTpl">
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-container>
+
+      <ng-template #listTpl>
+        <ng-container *ngIf="shipments().length === 0; else tableTpl">
+          <div class="empty-state">
+            <mat-icon>local_shipping</mat-icon>
+            <h3>No hay envíos</h3>
+            <p>Comienza creando tu primer envío</p>
+            <button mat-raised-button color="primary" routerLink="/shipments/new">
+              <mat-icon>add</mat-icon>
+              Crear Envío
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #tableTpl>
+          <div class="table-container">
+            <table mat-table [dataSource]="shipments()" class="shipments-table">
+              <!-- Code Column -->
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>Código</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <div class="shipment-code">
+                    <strong>{{ shipment.code }}</strong>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Client Column -->
+              <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                <td mat-cell *matCellDef="let shipment">
+                  {{ getClientName(shipment.clientId) }}
+                </td>
+              </ng-container>
+
+              <!-- Route Column -->
+              <ng-container matColumnDef="route">
+                <th mat-header-cell *matHeaderCellDef>Ruta</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <div class="route-info">
+                    <span class="route-text">{{ shipment.origin }} → {{ shipment.destination }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="weight">
+                <th mat-header-cell *matHeaderCellDef>Peso</th>
+                <td mat-cell *matCellDef="let shipment">
+                  {{ shipment.weightKg }} kg
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Estado</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <mat-chip [class]="'status-' + shipment.status">{{ getStatusLabel(shipment.status) }}</mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- ETA Column -->
+              <ng-container matColumnDef="eta">
+                <th mat-header-cell *matHeaderCellDef>ETA</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <ng-container *ngIf="shipment.eta; else naTpl">{{ shipment.eta | date:'short' }}</ng-container>
+                  <ng-template #naTpl>N/A</ng-template>
+                </td>
+              </ng-container>
+
+              <!-- Created Date Column -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Fecha de Creación</th>
+                <td mat-cell *matCellDef="let shipment">{{ shipment.createdAt | date:'short' }}</td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #actionsMenu="matMenu">
+                    <button mat-menu-item [routerLink]="['/shipments', shipment._id]">
+                      <mat-icon>visibility</mat-icon>
+                      Ver Detalles
+                    </button>
+                    <button mat-menu-item [routerLink]="['/shipments', shipment._id, 'edit']">
+                      <mat-icon>edit</mat-icon>
+                      Editar
+                    </button>
+                    <button mat-menu-item (click)="updateStatus(shipment)">
+                      <mat-icon>sync</mat-icon>
+                      Cambiar Estado
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="shipment-row" [routerLink]="['/shipments', row._id]"></tr>
+            </table>
+          </div>
+
+          <mat-paginator [length]="totalItems()" [pageSize]="pageSize()" [pageSizeOptions]="[5,10,20,50]" [pageIndex]="currentPage() - 1" (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
+        </ng-template>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

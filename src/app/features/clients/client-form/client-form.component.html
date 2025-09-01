@@ -1,0 +1,119 @@
+<div class="client-form-container">
+  <div class="header">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <h1><mat-icon>{{ isEdit() ? 'edit' : 'person_add' }}</mat-icon> {{ isEdit() ? 'Editar Cliente' : 'Nuevo Cliente' }}</h1>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEdit() ? 'Editar información del cliente' : 'Información del cliente' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <ng-container *ngIf="loading(); else formTpl">
+        <div class="loading-container"><mat-spinner></mat-spinner></div>
+      </ng-container>
+
+      <ng-template #formTpl>
+        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3>Información Básica</h3>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Nombre de la empresa *</mat-label>
+                <input matInput formControlName="name" placeholder="Ej: ACME Corporation">
+                <mat-icon matSuffix>business</mat-icon>
+                <mat-error *ngIf="clientForm.get('name')?.invalid && clientForm.get('name')?.touched">
+                  <ng-container *ngIf="clientForm.get('name')?.errors?.['required']">El nombre es requerido</ng-container>
+                  <ng-container *ngIf="clientForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</ng-container>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Email *</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="contacto@empresa.com">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched">
+                  <ng-container *ngIf="clientForm.get('email')?.errors?.['required']">El email es requerido</ng-container>
+                  <ng-container *ngIf="clientForm.get('email')?.errors?.['email']">Ingresa un email válido</ng-container>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="phone" placeholder="+1-555-0123">
+                <mat-icon matSuffix>phone</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Addresses Section -->
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Direcciones</h3>
+              <button mat-icon-button type="button" (click)="addAddress()"><mat-icon>add</mat-icon></button>
+            </div>
+
+            <div formArrayName="addresses">
+              <div *ngFor="let address of addressesArray.controls; let i = index" [formGroupName]="i" class="address-group">
+                <div class="address-header">
+                  <h4>Dirección {{ i + 1 }}</h4>
+                  <button *ngIf="addressesArray.length > 0" mat-icon-button type="button" (click)="removeAddress(i)" color="warn"><mat-icon>delete</mat-icon></button>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field class="full-width">
+                    <mat-label>Dirección *</mat-label>
+                    <input matInput formControlName="line1" placeholder="Calle, número, colonia">
+                    <mat-icon matSuffix>place</mat-icon>
+                    <mat-error *ngIf="address.get('line1')?.invalid && address.get('line1')?.touched">La dirección es requerida</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row-grid">
+                  <mat-form-field>
+                    <mat-label>Ciudad</mat-label>
+                    <input matInput formControlName="city" placeholder="Ciudad">
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Código Postal</mat-label>
+                    <input matInput formControlName="zip" placeholder="12345">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field class="full-width">
+                    <mat-label>País</mat-label>
+                    <input matInput formControlName="country" placeholder="México">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div *ngIf="addressesArray.length === 0" class="no-addresses">
+                <p>No hay direcciones registradas</p>
+                <button mat-raised-button type="button" (click)="addAddress()"><mat-icon>add</mat-icon>Agregar Dirección</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="goBack()">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="clientForm.invalid || submitting()">
+              <ng-container *ngIf="submitting(); else submitLabel"> <mat-spinner diameter="20"></mat-spinner> {{ isEdit() ? 'Actualizando...' : 'Creando...' }} </ng-container>
+              <ng-template #submitLabel>{{ isEdit() ? 'Actualizar Cliente' : 'Crear Cliente' }}</ng-template>
+            </button>
+          </div>
+        </form>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

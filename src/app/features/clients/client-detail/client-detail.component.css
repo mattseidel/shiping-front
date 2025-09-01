@@ -1,0 +1,142 @@
+.client-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.client-info-card,
+.addresses-card,
+.shipments-card {
+  margin-bottom: 24px;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.info-item span {
+  color: #333;
+}
+
+.addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.address-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fafafa;
+}
+
+.address-card h4 {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.address-line {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.address-details,
+.address-country {
+  margin: 0 0 4px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.empty-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.shipments-table {
+  width: 100%;
+}
+
+.shipment-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.shipment-row:hover {
+  background-color: #f5f5f5;
+}
+
+.status-created {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+}
+
+.status-in_transit {
+  background-color: #fff3e0 !important;
+  color: #f57c00 !important;
+}
+
+.status-delivered {
+  background-color: #e8f5e8 !important;
+  color: #4caf50 !important;
+}

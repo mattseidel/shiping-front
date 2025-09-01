@@ -1,0 +1,152 @@
+.shipment-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.search-field {
+  min-width: 250px;
+}
+
+.status-filter,
+.client-filter {
+  min-width: 150px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px 0;
+  color: #333;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.shipments-table {
+  width: 100%;
+}
+
+.shipment-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.shipment-row:hover {
+  background-color: #f5f5f5;
+}
+
+.shipment-code strong {
+  color: #333;
+}
+
+.route-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-text {
+  font-weight: 500;
+}
+
+.status-created {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+}
+
+.status-in_transit {
+  background-color: #fff3e0 !important;
+  color: #f57c00 !important;
+}
+
+.status-delivered {
+  background-color: #e8f5e8 !important;
+  color: #4caf50 !important;
+}
+
+.status-canceled {
+  background-color: #ffebee !important;
+  color: #d32f2f !important;
+}
+
+mat-paginator {
+  margin-top: 16px;
+}
+
+@media (max-width: 1200px) {
+  .filters {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .search-field,
+  .status-filter,
+  .client-filter {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  mat-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+}

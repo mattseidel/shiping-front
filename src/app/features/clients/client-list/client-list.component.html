@@ -1,0 +1,102 @@
+<div class="client-list-container">
+  <div class="header">
+    <h1>
+      <mat-icon>people</mat-icon>
+      Clientes
+    </h1>
+    <button mat-raised-button color="primary" routerLink="/clients/new">
+      <mat-icon>add</mat-icon>
+      Nuevo Cliente
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Lista de Clientes</mat-card-title>
+      <div class="spacer"></div>
+      <mat-form-field class="search-field">
+        <mat-label>Buscar clientes...</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="Nombre o email">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-header>
+
+    <mat-card-content>
+      <ng-container *ngIf="loading(); else listTpl">
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-container>
+
+      <ng-template #listTpl>
+        <ng-container *ngIf="clients().length === 0; else tableTpl">
+          <div class="empty-state">
+            <mat-icon>people_outline</mat-icon>
+            <h3>No hay clientes</h3>
+            <p>Comienza registrando tu primer cliente</p>
+            <button mat-raised-button color="primary" routerLink="/clients/new">
+              <mat-icon>add</mat-icon>
+              Registrar Cliente
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #tableTpl>
+          <div class="table-container">
+            <table mat-table [dataSource]="clients()" class="clients-table">
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let client"><div class="client-name"><strong>{{ client.name }}</strong></div></td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let client">{{ client.email }}</td>
+              </ng-container>
+
+              <!-- Phone Column -->
+              <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+                <td mat-cell *matCellDef="let client">{{ client.phone || 'N/A' }}</td>
+              </ng-container>
+
+              <!-- Addresses Column -->
+              <ng-container matColumnDef="addresses">
+                <th mat-header-cell *matHeaderCellDef>Direcciones</th>
+                <td mat-cell *matCellDef="let client">{{ client.addresses?.length || 0 }}</td>
+              </ng-container>
+
+              <!-- Created Date Column -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+                <td mat-cell *matCellDef="let client">{{ client.createdAt | date:'short' }}</td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let client">
+                  <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #actionsMenu="matMenu">
+                    <button mat-menu-item [routerLink]="['/clients', client._id]"><mat-icon>visibility</mat-icon>Ver Detalles</button>
+                    <button mat-menu-item [routerLink]="['/clients', client._id, 'edit']"><mat-icon>edit</mat-icon>Editar</button>
+                    <button mat-menu-item (click)="deleteClient(client)" class="delete-action"><mat-icon>delete</mat-icon>Eliminar</button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="client-row" [routerLink]="['/clients', row._id]"></tr>
+            </table>
+          </div>
+
+          <mat-paginator [length]="totalItems()" [pageSize]="pageSize()" [pageSizeOptions]="[5,10,20,50]" [pageIndex]="currentPage() - 1" (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
+        </ng-template>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,118 @@
+<div class="shipment-form-container">
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>
+      <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
+      {{ isEdit() ? 'Editar Envío' : 'Nuevo Envío' }}
+    </h1>
+  </div>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{ isEdit() ? 'Editar información del envío' : 'Información del envío' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <ng-container *ngIf="loading(); else formTpl">
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-container>
+
+      <ng-template #formTpl>
+        <form [formGroup]="shipmentForm" (ngSubmit)="onSubmit()">
+          <div class="form-section">
+            <h3>Información Básica</h3>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Cliente *</mat-label>
+                <mat-select formControlName="clientId">
+                  <mat-option *ngFor="let client of clients(); trackBy: trackByClient" [value]="client._id">{{ client.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="shipmentForm.get('clientId')?.invalid && shipmentForm.get('clientId')?.touched">El cliente es requerido</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Código de envío *</mat-label>
+                <input matInput formControlName="code" placeholder="TRK-ABC123">
+                <mat-icon matSuffix>qr_code</mat-icon>
+                <mat-error *ngIf="shipmentForm.get('code')?.invalid && shipmentForm.get('code')?.touched">
+                  <ng-container *ngIf="shipmentForm.get('code')?.errors?.['required']">El código es requerido</ng-container>
+                  <ng-container *ngIf="shipmentForm.get('code')?.errors?.['pattern']">El código solo puede contener letras, números y guiones (-)</ng-container>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row-grid">
+              <mat-form-field>
+                <mat-label>Origen *</mat-label>
+                <input matInput formControlName="origin" placeholder="Bogotá">
+                <mat-icon matSuffix>flight_takeoff</mat-icon>
+                <mat-error *ngIf="shipmentForm.get('origin')?.invalid && shipmentForm.get('origin')?.touched">El origen es requerido</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Destino *</mat-label>
+                <input matInput formControlName="destination" placeholder="Cali">
+                <mat-icon matSuffix>flight_land</mat-icon>
+                <mat-error *ngIf="shipmentForm.get('destination')?.invalid && shipmentForm.get('destination')?.touched">El destino es requerido</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row-grid">
+              <mat-form-field>
+                <mat-label>Peso (kg) *</mat-label>
+                <input matInput type="number" formControlName="weightKg" min="0" step="0.1">
+                <mat-icon matSuffix>scale</mat-icon>
+                <mat-error *ngIf="shipmentForm.get('weightKg')?.invalid && shipmentForm.get('weightKg')?.touched">
+                  <ng-container *ngIf="shipmentForm.get('weightKg')?.errors?.['required']">El peso es requerido</ng-container>
+                  <ng-container *ngIf="shipmentForm.get('weightKg')?.errors?.['min']">El peso debe ser mayor a 0</ng-container>
+                </mat-error>
+              </mat-form-field>
+
+              <ng-container *ngIf="!isEdit()">
+                <mat-form-field>
+                  <mat-label>Estado inicial</mat-label>
+                  <mat-select formControlName="status">
+                    <mat-option value="created">Creado</mat-option>
+                    <mat-option value="in_transit">En Tránsito</mat-option>
+                    <mat-option value="delivered">Entregado</mat-option>
+                    <mat-option value="canceled">Cancelado</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Fecha estimada de llegada (ETA)</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="eta">
+                <mat-hint>Opcional</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="goBack()">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="shipmentForm.invalid || submitting()">
+              <ng-container *ngIf="submitting(); else submitLabel">
+                <mat-spinner diameter="20"></mat-spinner>
+                {{ isEdit() ? 'Actualizando...' : 'Creando...' }}
+              </ng-container>
+              <ng-template #submitLabel>{{ isEdit() ? 'Actualizar Envío' : 'Crear Envío' }}</ng-template>
+            </button>
+          </div>
+        </form>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

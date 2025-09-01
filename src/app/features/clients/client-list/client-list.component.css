@@ -1,0 +1,101 @@
+.client-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.search-field {
+  min-width: 300px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.clients-table {
+  width: 100%;
+}
+
+.client-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.client-row:hover {
+  background-color: #f5f5f5;
+}
+
+.client-name strong {
+  color: #333;
+}
+
+.delete-action {
+  color: #d32f2f;
+}
+
+mat-paginator {
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .search-field {
+    min-width: 100%;
+  }
+
+  mat-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+}

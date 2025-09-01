@@ -1,0 +1,97 @@
+<div class="dashboard-container">
+  <h1 class="dashboard-title"><mat-icon>dashboard</mat-icon>Dashboard</h1>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon created"><mat-icon>add_circle</mat-icon></div>
+          <div class="stat-info"><h3>{{ createdShipments() }}</h3><p>Envíos Creados</p></div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon in-transit"><mat-icon>local_shipping</mat-icon></div>
+          <div class="stat-info"><h3>{{ inTransitShipments() }}</h3><p>En Tránsito</p></div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon delivered"><mat-icon>check_circle</mat-icon></div>
+          <div class="stat-info"><h3>{{ deliveredShipments() }}</h3><p>Entregados</p></div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon clients"><mat-icon>people</mat-icon></div>
+          <div class="stat-info"><h3>{{ totalClients() }}</h3><p>Total Clientes</p></div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="content-grid">
+    <mat-card class="recent-shipments">
+      <mat-card-header>
+        <mat-card-title><mat-icon>history</mat-icon>Envíos Recientes</mat-card-title>
+        <div class="spacer"></div>
+        <button mat-raised-button color="primary" routerLink="/shipments">Ver Todos</button>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngIf="loadingShipments(); else shipmentsTpl">
+          <div class="loading-container"><mat-spinner></mat-spinner></div>
+        </ng-container>
+        <ng-template #shipmentsTpl>
+          <ng-container *ngIf="recentShipments().length === 0; else listTpl">
+            <div class="empty-state"><mat-icon>local_shipping</mat-icon><p>No hay envíos recientes</p><button mat-raised-button color="primary" routerLink="/shipments/new">Crear Primer Envío</button></div>
+          </ng-container>
+          <ng-template #listTpl>
+            <div class="shipments-list">
+              <div *ngFor="let shipment of recentShipments(); trackBy: trackByShipment" class="shipment-item">
+                <div class="shipment-info"><h4>{{ shipment.code }}</h4><p>{{ shipment.origin }} → {{ shipment.destination }}</p><small>{{ shipment.createdAt | date:'short' }}</small></div>
+                <mat-chip [class]="'status-' + shipment.status">{{ getStatusLabel(shipment.status) }}</mat-chip>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="recent-clients">
+      <mat-card-header>
+        <mat-card-title><mat-icon>people</mat-icon>Clientes Recientes</mat-card-title>
+        <div class="spacer"></div>
+        <button mat-raised-button color="primary" routerLink="/clients">Ver Todos</button>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngIf="loadingClients(); else clientsTpl">
+          <div class="loading-container"><mat-spinner></mat-spinner></div>
+        </ng-container>
+        <ng-template #clientsTpl>
+          <ng-container *ngIf="recentClients().length === 0; else clientsListTpl">
+            <div class="empty-state"><mat-icon>people</mat-icon><p>No hay clientes registrados</p><button mat-raised-button color="primary" routerLink="/clients/new">Registrar Primer Cliente</button></div>
+          </ng-container>
+          <ng-template #clientsListTpl>
+            <div class="clients-list">
+              <div *ngFor="let client of recentClients(); trackBy: trackByClient" class="client-item">
+                <div class="client-info"><h4>{{ client.name }}</h4><p>{{ client.email }}</p><small>{{ client.createdAt | date:'short' }}</small></div>
+                <mat-icon>chevron_right</mat-icon>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

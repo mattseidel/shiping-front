@@ -1,0 +1,124 @@
+<div class="test-data-container">
+  <div class="header">
+    <h1>
+      <mat-icon>science</mat-icon>
+      Datos de Prueba
+    </h1>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Seed Clients Card -->
+    <mat-card class="seed-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>people</mat-icon>
+          Clientes de Prueba
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p>Genera clientes ficticios para probar la aplicación. Los clientes incluirán nombres, emails y direcciones aleatorias.</p>
+        
+        <mat-form-field class="count-field">
+          <mat-label>Cantidad de clientes</mat-label>
+          <input matInput type="number" [formControl]="clientsCountControl" min="1" max="100">
+          <mat-error *ngIf="clientsCountControl.invalid && clientsCountControl.touched">
+            <ng-container *ngIf="clientsCountControl.errors?.['required']">La cantidad es requerida</ng-container>
+            <ng-container *ngIf="clientsCountControl.errors?.['min']">Mínimo 1 cliente</ng-container>
+            <ng-container *ngIf="clientsCountControl.errors?.['max']">Máximo 100 clientes</ng-container>
+          </mat-error>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="seedClients()" [disabled]="creatingClients() || clientsCountControl.invalid">
+          <ng-container *ngIf="creatingClients(); else createClientsLabel">
+            <mat-spinner diameter="20"></mat-spinner>
+            Creando...
+          </ng-container>
+          <ng-template #createClientsLabel><mat-icon>add_circle</mat-icon>Crear Clientes</ng-template>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Seed Shipments Card -->
+    <mat-card class="seed-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>local_shipping</mat-icon>
+          Envíos de Prueba
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p>Genera envíos ficticios para probar la aplicación. <strong>Nota:</strong> Necesitas tener clientes registrados primero.</p>
+        
+        <mat-form-field class="count-field">
+          <mat-label>Cantidad de envíos</mat-label>
+          <input matInput type="number" [formControl]="shipmentsCountControl" min="1" max="100">
+          <mat-error *ngIf="shipmentsCountControl.invalid && shipmentsCountControl.touched">
+            <ng-container *ngIf="shipmentsCountControl.errors?.['required']">La cantidad es requerida</ng-container>
+            <ng-container *ngIf="shipmentsCountControl.errors?.['min']">Mínimo 1 envío</ng-container>
+            <ng-container *ngIf="shipmentsCountControl.errors?.['max']">Máximo 100 envíos</ng-container>
+          </mat-error>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="seedShipments()" [disabled]="creatingShipments() || shipmentsCountControl.invalid">
+          <ng-container *ngIf="creatingShipments(); else createShipmentsLabel">
+            <mat-spinner diameter="20"></mat-spinner>
+            Creando...
+          </ng-container>
+          <ng-template #createShipmentsLabel><mat-icon>add_circle</mat-icon>Crear Envíos</ng-template>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Instructions Card -->
+  <mat-card class="instructions-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>info</mat-icon>
+        Instrucciones
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="instructions-content">
+        <div class="instruction-item">
+          <span class="step-number">1</span>
+          <div class="step-content">
+            <h4>Crear clientes primero</h4>
+            <p>Los envíos necesitan estar asociados a clientes existentes, por lo que debes crear clientes antes que envíos.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <span class="step-number">2</span>
+          <div class="step-content">
+            <h4>Crear envíos</h4>
+            <p>Una vez que tengas clientes, puedes crear envíos de prueba que serán asignados aleatoriamente a los clientes existentes.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <span class="step-number">3</span>
+          <div class="step-content">
+            <h4>Explorar la aplicación</h4>
+            <p>Con los datos de prueba creados, puedes navegar por las diferentes secciones para probar todas las funcionalidades.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <mat-icon>warning</mat-icon>
+        <div>
+          <h4>Importante</h4>
+          <p>Los datos generados son ficticios y están destinados únicamente para pruebas. No uses esta función en un entorno de producción.</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

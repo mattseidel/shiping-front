@@ -1,0 +1,175 @@
+<div class="shipment-detail-container">
+  <ng-container *ngIf="loading(); else contentTpl">
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-template #contentTpl>
+    <ng-container *ngIf="shipment(); else notFoundTpl">
+      <div class="header">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1>
+          <mat-icon>local_shipping</mat-icon>
+          {{ shipment()!.code }}
+        </h1>
+        <div class="spacer"></div>
+        <button mat-raised-button color="primary" [routerLink]="['/shipments', shipment()!._id, 'edit']">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+      </div>
+
+      <!-- Shipment Information -->
+      <mat-card class="shipment-info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Información del Envío
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Código:</label>
+              <span class="shipment-code">{{ shipment()!.code }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Cliente:</label>
+              <span>{{ clientName() }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Origen:</label>
+              <span>{{ shipment()!.origin }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Destino:</label>
+              <span>{{ shipment()!.destination }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Peso:</label>
+              <span>{{ shipment()!.weightKg }} kg</span>
+            </div>
+
+            <div class="info-item">
+              <label>Estado:</label>
+              <mat-chip [class]="'status-' + shipment()!.status">{{ getStatusLabel(shipment()!.status) }}</mat-chip>
+            </div>
+
+            <div class="info-item">
+              <label>ETA:</label>
+              <span>{{ shipment()!.eta ? (shipment()!.eta | date:'medium') : 'No especificado' }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Fecha de creación:</label>
+              <span>{{ shipment()!.createdAt | date:'medium' }}</span>
+            </div>
+
+            <div class="info-item">
+              <label>Última actualización:</label>
+              <span>{{ shipment()!.updatedAt | date:'medium' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Status Update Card -->
+      <mat-card class="status-update-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>sync</mat-icon>
+            Actualizar Estado
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="status-form">
+            <mat-form-field class="status-select">
+              <mat-label>Nuevo estado</mat-label>
+              <mat-select [formControl]="newStatusControl">
+                <mat-option value="created">Creado</mat-option>
+                <mat-option value="in_transit">En Tránsito</mat-option>
+                <mat-option value="delivered">Entregado</mat-option>
+                <mat-option value="canceled">Cancelado</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="note-field">
+              <mat-label>Nota (opcional)</mat-label>
+              <textarea matInput [formControl]="noteControl" rows="3" placeholder="Descripción del cambio..."></textarea>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="updateStatus()" [disabled]="updatingStatus() || newStatusControl.invalid || newStatusControl.value === shipment()!.status">
+              <ng-container *ngIf="updatingStatus(); else updateLabel">
+                <mat-spinner diameter="20"></mat-spinner>
+                Actualizando...
+              </ng-container>
+              <ng-template #updateLabel><mat-icon>update</mat-icon>Actualizar Estado</ng-template>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- History Card -->
+      <mat-card class="history-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>history</mat-icon>
+            Historial de Estados
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <ng-container *ngIf="loadingHistory(); else historyTpl">
+            <div class="loading-container">
+              <mat-spinner></mat-spinner>
+            </div>
+          </ng-container>
+
+          <ng-template #historyTpl>
+            <ng-container *ngIf="history().length === 0; else timelineTpl">
+              <div class="empty-state">
+                <mat-icon>history</mat-icon>
+                <p>No hay cambios de estado registrados</p>
+              </div>
+            </ng-container>
+
+            <ng-template #timelineTpl>
+              <div class="history-timeline">
+                <div *ngFor="let entry of history(); trackBy: trackByEntry" class="timeline-item">
+                  <div class="timeline-marker">
+                    <mat-icon>{{ getStatusIcon(entry.newStatus) }}</mat-icon>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <span class="status-change">{{ getStatusLabel(entry.prevStatus) }} → {{ getStatusLabel(entry.newStatus) }}</span>
+                      <span class="timeline-date">{{ entry.at | date:'medium' }}</span>
+                    </div>
+                    <p *ngIf="entry.note" class="timeline-note">{{ entry.note }}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+
+    <ng-template #notFoundTpl>
+      <div class="error-state">
+        <mat-icon>error</mat-icon>
+        <h3>Envío no encontrado</h3>
+        <p>El envío que buscas no existe o ha sido eliminado</p>
+        <button mat-raised-button color="primary" (click)="goBack()"><mat-icon>arrow_back</mat-icon>Volver a la lista</button>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

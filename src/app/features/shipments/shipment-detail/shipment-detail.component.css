@@ -1,0 +1,216 @@
+.shipment-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.shipment-info-card,
+.status-update-card,
+.history-card {
+  margin-bottom: 24px;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.info-item span {
+  color: #333;
+}
+
+.shipment-code {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.status-form {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.status-select,
+.note-field {
+  width: 100%;
+}
+
+.empty-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state mat-icon,
+.error-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.history-timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.history-timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #e0e0e0;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.timeline-content {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #3f51b5;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.status-change {
+  font-weight: 500;
+  color: #333;
+}
+
+.timeline-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.timeline-note {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+}
+
+.status-created {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+}
+
+.status-in_transit {
+  background-color: #fff3e0 !important;
+  color: #f57c00 !important;
+}
+
+.status-delivered {
+  background-color: #e8f5e8 !important;
+  color: #4caf50 !important;
+}
+
+.status-canceled {
+  background-color: #ffebee !important;
+  color: #d32f2f !important;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-form {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
